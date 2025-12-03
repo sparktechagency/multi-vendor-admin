@@ -9,8 +9,8 @@ import { useDispatch } from "react-redux";
 import { useLogInMutation } from "../Redux/api/auth/authApi";
 
 export default function SignIn() {
-  const [email, setEmail] = useState("techandtech360@gmail.com");
-  const [password, setPassword] = useState("securepass");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
   const [logIn, { isLoading }] = useLogInMutation();
@@ -57,15 +57,15 @@ export default function SignIn() {
   };
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-white p-5">
-      <div className="bg-white shadow-lg relative rounded-2xl px-5 py-20 w-full max-w-xl text-center">
+    <div className="flex items-center justify-center min-h-screen p-5 bg-white">
+      <div className="relative w-full max-w-xl px-5 py-20 text-center bg-white shadow-lg rounded-2xl">
         <BrandLogo
           status="Login to your account"
           information="please enter your email and password to continue."
         />
         <form className="space-y-5" onSubmit={handleSignIn}>
           <div className="w-full">
-            <label className="text-xl text-gray-800 mb-2 flex justify-start text-start">
+            <label className="flex justify-start mb-2 text-xl text-gray-800 text-start">
               Email address
             </label>
             <input
@@ -80,10 +80,10 @@ export default function SignIn() {
             />
           </div>
           <div className="w-full">
-            <label className="text-xl text-gray-800 mb-2 flex justify-start text-start">
+            <label className="flex justify-start mb-2 text-xl text-gray-800 text-start">
               Password
             </label>
-            <div className="w-full relative">
+            <div className="relative w-full">
               <input
                 type={showPassword ? "text" : "password"}
                 name="password"
@@ -97,7 +97,7 @@ export default function SignIn() {
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3 bottom-4 flex items-center text-gray-400"
+                className="absolute flex items-center text-gray-400 right-3 bottom-4"
               >
                 {showPassword ? (
                   <IoEyeOffOutline className="w-5 h-5 text-[#FF914C]" />
@@ -108,7 +108,7 @@ export default function SignIn() {
             </div>
           </div>
 
-          <div className="flex justify-end items-center text-xs my-5">
+          <div className="flex items-center justify-end my-5 text-xs">
             <Link
               to="/forget-password"
               className="text-[#FF914C] text-sm hover:text-[#FF914C]/80"
@@ -117,7 +117,7 @@ export default function SignIn() {
             </Link>
           </div>
 
-          <div className="flex justify-center items-center text-white">
+          <div className="flex items-center justify-center text-white">
             <button
               type="submit"
               disabled={isLoading}

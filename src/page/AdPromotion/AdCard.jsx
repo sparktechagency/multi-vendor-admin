@@ -3,7 +3,7 @@ import { FiMoreVertical } from "react-icons/fi";
 import {
   useDeleteAdsMutation,
   useUpdateAdsMutation,
-} from "../../Redux/api/ads/adsApi";
+} from "../../Redux/api/ads/advertisementApi";
 import Swal from "sweetalert2";
 import EditAdModal from "./EditAdModal";
 import formatDate from "../../utils/formatDate";

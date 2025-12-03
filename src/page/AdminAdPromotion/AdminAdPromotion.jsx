@@ -1,7 +1,7 @@
 import { useState } from "react";
 import PageHeading from "../../shared/PageHeading";
-import { AdCard } from "./AdCard";
-import AddAdModal from "./AddAdModal";
+import { AdCard } from "../AdPromotion/AdCard";
+import AddAdModal from "../AdPromotion/AddAdModal";
 import {
   useGetAllAdsQuery,
   useCreateAdsMutation,
@@ -9,7 +9,7 @@ import {
 import useImageUpload from "../../hooks/useImageUpload";
 import { ConfigProvider, Pagination } from "antd";
 
-export default function AdPromotion() {
+export default function AdminAdPromotion() {
   const [addModalOpen, setAddModalOpen] = useState(false);
   const [categoryName, setCategoryName] = useState("Electronics");
   const { uploadedImage, handleImageUpload, handleRemoveImage } =
@@ -27,6 +27,7 @@ export default function AdPromotion() {
   const { data: adsData } = useGetAllAdsQuery({
     page: 1,
     limit: 100000,
+    role: "admin", // Filter by role admin
   });
   const [createAds, { isLoading: isCreating }] = useCreateAdsMutation();
 
@@ -59,7 +60,7 @@ export default function AdPromotion() {
   return (
     <div className="min-h-screen p-6 bg-neutral-100">
       <div className="flex items-center justify-between mb-5 text-center">
-        <PageHeading title="Ads Promotion" />
+        <PageHeading title="Admin Ads Promotion" />
         <div className="flex items-center justify-end">
           <button
             onClick={() => {

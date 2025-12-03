@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
 import { IoSearch } from "react-icons/io5";
-import { MdBlockFlipped } from "react-icons/md";
+import { MdBlockFlipped, MdDeleteForever } from "react-icons/md";
 import PageHeading from "../../shared/PageHeading";
 import { ConfigProvider, Table } from "antd";
 import {
   useGetAllUsersQuery,
   useBlockUserMutation,
+  useDeleteUserMutation,
 } from "../../Redux/api/user/userApi";
 import Loader from "../../components/common/Loader";
 import Swal from "sweetalert2";
@@ -13,14 +14,15 @@ import Swal from "sweetalert2";
 export default function Users() {
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);
-  
+
   const { data: users, isFetching } = useGetAllUsersQuery({
     page: 1,
     limit: 100000,
   });
-  
+
   const pageSize = 10;
   const [blockUser, { isLoading: isBlocking }] = useBlockUserMutation();
+  const [deleteUser, { isLoading: isDeleting }] = useDeleteUserMutation();
 
   const customerList =
     users?.data?.users?.filter((u) => {
@@ -34,7 +36,7 @@ export default function Users() {
     const name = (u?.name || "").toString().toLowerCase();
     return name.includes(searchTerm);
   });
-  
+
   const totalItems = filteredUsers.length;
 
   const startIndex = (page - 1) * pageSize;
@@ -82,19 +84,27 @@ export default function Users() {
       title: "Action",
       key: "action",
       render: (_, record) => (
-        <button
-          onClick={() => handleBlockToggle(record)}
-          disabled={isBlocking}
-          className={` rounded-lg p-2 bg-[#d3e8e6] transition duration-200 ${
-            isBlocking ? "opacity-60 cursor-not-allowed" : ""
-          }`}
-        >
-          <MdBlockFlipped
-            className={`w-6 h-6 ${
-              record?.isBlocked ? "text-red-600 " : "text-[#14803c]"
-            }`}
-          />
-        </button>
+        <div className="flex gap-2">
+          <button
+            onClick={() => handleBlockToggle(record)}
+            disabled={isBlocking}
+            className={` rounded-lg p-2 bg-[#d3e8e6] transition duration-200 ${isBlocking ? "opacity-60 cursor-not-allowed" : ""
+              }`}
+          >
+            <MdBlockFlipped
+              className={`w-6 h-6 ${record?.isBlocked ? "text-red-600 " : "text-[#14803c]"
+                }`}
+            />
+          </button>
+          <button
+            onClick={() => handleDeleteUser(record)}
+            disabled={isDeleting}
+            className={`rounded-lg p-2 bg-red-200 transition duration-200 ${isDeleting ? "opacity-60 cursor-not-allowed" : ""
+              }`}
+          >
+            <MdDeleteForever className="w-6 h-6 text-red-600" />
+          </button>
+        </div>
       ),
     },
   ];
@@ -139,6 +149,44 @@ export default function Users() {
     }
   };
 
+  const handleDeleteUser = async (user) => {
+    if (!user?.id) {
+      return;
+    }
+
+    const result = await Swal.fire({
+      title: "Delete user?",
+      text: `Are you sure you want to delete ${
+        user?.name || "this user"
+      } permanently?`,
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Delete",
+      cancelButtonText: "Cancel",
+      confirmButtonColor: "#d33",
+    });
+
+    if (!result.isConfirmed) {
+      return;
+    }
+
+    try {
+      await deleteUser(user.id).unwrap();
+      await Swal.fire({
+        icon: "success",
+        title: "Success",
+        text: `User deleted successfully`,
+        confirmButtonColor: "#14803c",
+      });
+    } catch (_) {
+      await Swal.fire({
+        icon: "error",
+        title: "Failed",
+        text: "Something went wrong. Please try again.",
+      });
+    }
+  };
+
   useEffect(() => {
     setPage(1);
   }, [search]);
@@ -149,7 +197,7 @@ export default function Users() {
 
   return (
     <>
-      <div className="my-5 md:my-10 flex flex-col md:flex-row gap-5 justify-between items-center">
+      <div className="flex flex-col items-center justify-between gap-5 my-5 md:my-10 md:flex-row">
         <PageHeading title="User Management" />
         <div className="relative w-full sm:w-[300px] mt-5 md:mt-0 lg:mt-0">
           <input
@@ -159,7 +207,7 @@ export default function Users() {
             onChange={(e) => setSearch(e.target.value)}
             className="border-2 border-[#14803c] py-3 pl-12 pr-[65px] outline-none w-full rounded-md"
           />
-          <span className=" text-gray-600 absolute top-0 left-0 h-full px-5 flex items-center justify-center rounded-r-md cursor-pointer">
+          <span className="absolute top-0 left-0 flex items-center justify-center h-full px-5 text-gray-600 cursor-pointer rounded-r-md">
             <IoSearch className="text-[1.3rem]" />
           </span>
         </div>

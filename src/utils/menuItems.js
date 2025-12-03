@@ -1,7 +1,8 @@
-import { MdDashboard, MdOutlineCategory } from "react-icons/md";
+import { MdAdminPanelSettings, MdDashboard, MdOutlineCategory } from "react-icons/md";
 import { FaUsers, FaCog } from "react-icons/fa";
 import { IoChatboxEllipsesOutline } from "react-icons/io5";
 import { TbHomeDollar } from "react-icons/tb";
+import { SiAdventofcode } from "react-icons/si";
 import { BiCheckShield, BiCommand } from "react-icons/bi";
 
 export const AdminItems = [
@@ -23,6 +24,12 @@ export const AdminItems = [
     icon: TbHomeDollar,
     link: "/dashboard/seller-management",
   },
+   {
+    key: "adminmanagement",
+    label: "Admin Management",
+    icon: MdAdminPanelSettings,
+    link: "/admin-management",
+  },
   {
     key: "categorymanagement",
     label: "Category Management",
@@ -31,9 +38,15 @@ export const AdminItems = [
   },
   {
     key: "englishAdPromotion",
-    label: "Ads Promotion",
+    label: "Seller Ads Promotion",
     icon: BiCommand,
     link: "/ads-promotion",
+  },
+    {
+    key: "adminadpromotion",
+    label: "Admin Ads Promotion",
+    icon: SiAdventofcode,
+    link: "/admin-ads-promotion",
   },
   {
     key: "customerSupport",
