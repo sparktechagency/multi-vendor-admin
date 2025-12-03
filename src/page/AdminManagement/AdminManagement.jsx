@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { IoSearch } from "react-icons/io5";
-import { MdBlockFlipped, MdDeleteForever, MdEdit } from "react-icons/md";
+import { MdBlockFlipped, MdEdit } from "react-icons/md";
 import PageHeading from "../../shared/PageHeading";
 import { ConfigProvider, Table } from "antd";
 import Loader from "../../components/common/Loader";
@@ -15,8 +15,11 @@ import {
 import AddEditAdminModal from "./Modals/AddEditAdminModal";
 import DeleteAdminModal from "./Modals/DeleteAdminModal";
 import BlockAdminModal from "./Modals/BlockAdminModal";
+import { FiTrash2 } from "react-icons/fi";
+import { useSelector } from "react-redux";
 
 export default function AdminManagement() {
+  const { user: loggedInUser } = useSelector((state) => state.auth);
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);
   const pageSize = 10;
@@ -106,12 +109,20 @@ export default function AdminManagement() {
           </button> */}
           <button
             onClick={() => handleDeleteAdmin(record)}
-            disabled={isDeleting}
+            disabled={
+              isDeleting ||
+              loggedInUser?._id === record.id ||
+              loggedInUser?.id === record.id
+            }
             className={`rounded-lg p-2 bg-red-200 transition duration-200 ${
-              isDeleting ? "opacity-60 cursor-not-allowed" : ""
+              isDeleting ||
+              loggedInUser?._id === record.id ||
+              loggedInUser?.id === record.id
+                ? "opacity-60 cursor-not-allowed"
+                : ""
             }`}
           >
-            <MdDeleteForever className="w-6 h-6 text-red-600" />
+            <FiTrash2 className="w-6 h-6 text-red-600" />
           </button>
         </div>
       ),

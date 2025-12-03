@@ -70,9 +70,9 @@ function ProfilePage() {
 
   return (
     <div className="overflow-y-auto">
-      <div className="px-5 pb-5 h-full">
+      <div className="h-full px-5 pb-5">
         <PageHeading title=" Admin Profile" />
-        <div className="mx-auto flex flex-col justify-center items-center">
+        <div className="flex flex-col items-center justify-center mx-auto">
           {/* Profile Picture Section */}
           <div className="flex flex-col justify-center items-center mt-5 text-gray-800 w-[900px] mx-auto p-5 gap-5 rounded-lg">
             <div className="relative">
@@ -81,13 +81,13 @@ function ProfilePage() {
                   src={
                     previewUrl ||
                     cacheBust(typeof image === "string" ? image : getAdminProfile?.data?.user?.image) ||
-                    "https://avatar.iran.liara.run/public/44"
+                    "https://avatar.iran.liara.run/public/13"
                   }
                   alt="profile"
-                  className="h-full w-full object-cover"
+                  className="object-cover w-full h-full"
                 />
                 {/* Upload Icon */}
-                <div className="absolute bottom-2 right-2 bg-white p-2 rounded-full shadow-md cursor-pointer">
+                <div className="absolute p-2 bg-white rounded-full shadow-md cursor-pointer bottom-2 right-2">
                   <label htmlFor="profilePicUpload" className="cursor-pointer">
                     <FaCamera className="text-[#FF914C]" />
                   </label>
@@ -102,12 +102,12 @@ function ProfilePage() {
               </div>
             </div>
             <div className="flex items-center gap-3">
-              <p className="text-xl md:text-3xl font-bold text-center">{name || "-"}</p>
+              <p className="text-xl font-bold text-center md:text-3xl">{name || "-"}</p>
             </div>
           </div>
 
           {/* Tab Navigation Section */}
-          <div className="flex justify-center items-center gap-5 text-md md:text-xl font-semibold my-5">
+          <div className="flex items-center justify-center gap-5 my-5 font-semibold text-md md:text-xl">
             <p
               onClick={() => setActiveTab("editProfile")}
               className={`cursor-pointer pb-1 ${
@@ -131,7 +131,7 @@ function ProfilePage() {
           </div>
 
           {/* Tab Content Section */}
-          <div className="flex justify-center items-center p-5 rounded-md">
+          <div className="flex items-center justify-center p-5 rounded-md">
             <div className="w-full max-w-3xl">
               {activeTab === "editProfile" && <EditProfile />}
               {activeTab === "changePassword" && <ChangePass />}
