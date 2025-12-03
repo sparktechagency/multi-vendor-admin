@@ -1,5 +1,6 @@
 import { ConfigProvider, Table } from "antd";
 import { MdBlockFlipped } from "react-icons/md";
+import { FiTrash2 } from "react-icons/fi"; // New Import
 import PageHeading from "../../shared/PageHeading";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
@@ -11,6 +12,7 @@ import {
   useBlockUserMutation,
   useGetAllUsersQuery,
 } from "../../Redux/api/user/userApi";
+import { useDeleteSellerMutation } from "../../Redux/api/seller/sellerApi"; // New Import
 
 const SellerManagement = () => {
   const [search, setSearch] = useState("");
@@ -30,6 +32,7 @@ const SellerManagement = () => {
       return role === "seller";
     }) || [];
   const [blockUser, { isLoading: isBlocking }] = useBlockUserMutation();
+  const [deleteSeller, { isLoading: isDeleting }] = useDeleteSellerMutation(); // New Destructure
 
   // const [approveSeller, { isLoading: isApproving }] =
   //   useApproveSellerMutation();
@@ -82,6 +85,37 @@ const SellerManagement = () => {
         icon: "error",
         title: "Failed",
         text: error?.data?.message || "Something went wrong. Please try again.",
+      });
+    }
+  };
+
+  const handleDeleteSeller = async (sellerId) => {
+    const result = await Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Yes, delete it!",
+      cancelButtonText: "No, cancel!",
+      confirmButtonColor: "#EF4444",
+      cancelButtonColor: "#14803c",
+    });
+
+    if (!result.isConfirmed) return;
+
+    try {
+      await deleteSeller(sellerId).unwrap();
+      await Swal.fire({
+        icon: "success",
+        title: "Deleted!",
+        text: "Seller has been deleted successfully.",
+        confirmButtonColor: "#14803c",
+      });
+    } catch (error) {
+      await Swal.fire({
+        icon: "error",
+        title: "Failed!",
+        text: error?.data?.message || "Failed to delete seller. Please try again.",
       });
     }
   };
@@ -151,27 +185,27 @@ const SellerManagement = () => {
       width: 220,
       ellipsis: true,
     },
-    {
-      title: "Distribution",
-      dataIndex: "distribution",
-      key: "distribution",
-      width: 180,
-      ellipsis: true,
-    },
+    // {
+    //   title: "Distribution",
+    //   dataIndex: "distribution",
+    //   key: "distribution",
+    //   width: 200,
+    //   ellipsis: true,
+    // },
     {
       title: "Location",
       dataIndex: "businessAddress",
       key: "businessAddress",
-      width: 240,
+      width: 200,
       ellipsis: true,
     },
-    {
-      title: "Status",
-      dataIndex: "status",
-      key: "status",
-      width: 120,
-      ellipsis: true,
-    },
+    // {
+    //   title: "Status",
+    //   dataIndex: "status",
+    //   key: "status",
+    //   width: 120,
+    //   ellipsis: true,
+    // },
     {
       title: "Action",
       key: "action",
@@ -195,7 +229,7 @@ const SellerManagement = () => {
               />
             </button> */}
 
-            <Link to="/chat">
+            <Link to="/chat" state={{ participantId: record.id }}>
               <button className="border border-[#14803c] rounded-lg p-2 bg-[#d3e8e6] text-[#14803c] hover:bg-[#b4d9d4] transition duration-200">
                 <IoChatbubbleEllipsesOutline className="w-6 h-6 text-[#14803c]" />
               </button>
@@ -219,6 +253,18 @@ const SellerManagement = () => {
                 }`}
               />
             </button>
+            {/* New Delete Button */}
+            <button
+              onClick={() => handleDeleteSeller(record.id)}
+              disabled={isDeleting}
+              className={`rounded-lg p-2 transition duration-200 ${
+                isDeleting
+                  ? "opacity-60 cursor-not-allowed"
+                  : "border border-[#EF4444] bg-[#FEE2E2] text-[#EF4444] hover:bg-[#FCD5D5]"
+              }`}
+            >
+              <FiTrash2 className="w-6 h-6" />
+            </button>
           </div>
         );
       },
@@ -227,9 +273,9 @@ const SellerManagement = () => {
 
   return (
     <>
-      <div className="my-5 md:my-10 flex flex-col md:flex-row gap-5 justify-between items-center">
+      <div className="flex flex-col items-center justify-between gap-5 my-5 md:my-10 md:flex-row">
         <PageHeading title="Seller Management" />
-        <div className="flex flex-col md:flex-row gap-5 items-center justify-between">
+        <div className="flex flex-col items-center justify-between gap-5 md:flex-row">
           <div className="relative w-full sm:w-[300px] mt-5 md:mt-0 lg:mt-0">
             <input
               type="text"
@@ -238,7 +284,7 @@ const SellerManagement = () => {
               onChange={(e) => setSearch(e.target.value)}
               className="border-2 border-[#14803c] py-3 pl-12 pr-[65px] outline-none w-full rounded-md"
             />
-            <span className=" text-gray-600 absolute top-0 left-0 h-full px-5 flex items-center justify-center rounded-r-md cursor-pointer">
+            <span className="absolute top-0 left-0 flex items-center justify-center h-full px-5 text-gray-600 cursor-pointer rounded-r-md">
               <IoSearch className="text-[1.3rem]" />
             </span>
           </div>

@@ -1,6 +1,6 @@
 import { baseApi } from "../baseApi";
 
-export const adsApi = baseApi.injectEndpoints({
+export const advertisementApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     // Create ad (supports FormData for file upload)
     createAds: builder.mutation({
@@ -58,4 +58,4 @@ export const {
   useUpdateAdsMutation,
   useDeleteAdsMutation,
   useGetMyAdsQuery,
-} = adsApi;
+} = advertisementApi;

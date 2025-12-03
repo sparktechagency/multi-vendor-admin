@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from "react";
+import { useLocation } from "react-router-dom";
 import { AiOutlineSearch } from "react-icons/ai";
 import { RiSendPlane2Fill } from "react-icons/ri";
 import { FiMenu, FiMoreVertical } from "react-icons/fi";
@@ -12,6 +13,7 @@ import { useSelector } from "react-redux";
 import { X } from "lucide-react";
 
 const Chat = () => {
+  const location = useLocation();
   const {
     socket,
     sendMessage,
@@ -208,43 +210,47 @@ const Chat = () => {
     try {
       if (!participantId) throw new Error("Participant ID is required");
 
-      const data = { participantId };
-      await startChat(data).unwrap().then((res) => {
-        if (res?.success) {
+      const res = await startChat({ participantId }).unwrap();
 
-          refetchChats();
+      if (res?.success && res.data) {
+         handleSelectChat(res.data);
         }
-      });
     } catch (error) {
       console.error("Error starting chat:", error);
     }
   };
 
   useEffect(() => {
+    const participantId = location.state?.participantId;
+    if (participantId) {
+      handleStartChat(participantId);
+      // Optional: Clear the state after using it, to avoid re-triggering on re-renders.
+      // window.history.replaceState({}, document.title)
+    }
+  }, [location.state?.participantId]);
 
-
-
-  }, [messages, selectedChat, isConnected]);
-
-  const filteredChats = chat?.data?.filter(chatItem =>
+  const filteredChatsSource = chat?.data?.filter(chatItem =>
     chatItem.receiverId?.name?.toLowerCase().includes(searchTerm.toLowerCase())
   ) || [];
+
+  // Deduplicate the chats array based on _id to prevent rendering duplicates
+  const filteredChats = Array.from(new Map(filteredChatsSource.map(item => [item._id, item])).values());
 
   return (
     <div className="flex flex-col h-[calc(100vh-80px)] bg-gradient-to-br from-gray-50 to-gray-100">
 
-      <div className="bg-white shadow-sm border-b border-gray-200 px-5 py-3">
+      <div className="px-5 py-3 bg-white border-b border-gray-200 shadow-sm">
         <div className="flex items-center justify-between">
           <h1 className="text-xl font-semibold text-gray-800">Messages</h1>
           <div className="md:hidden">
             <FiMenu
-              className="text-2xl cursor-pointer text-gray-600"
+              className="text-2xl text-gray-600 cursor-pointer"
               onClick={() => setShowSidebar(!showSidebar)}
             />
           </div>
         </div>
         {!isConnected && (
-          <div className="text-xs text-red-500 mt-1">
+          <div className="mt-1 text-xs text-red-500">
             Disconnected - attempting to reconnect...
           </div>
         )}
@@ -257,7 +263,7 @@ const Chat = () => {
             }`}
         >
 
-          <div className="md:hidden flex justify-end p-4 border-b">
+          <div className="flex justify-end p-4 border-b md:hidden">
             <button
               className="text-gray-500 hover:text-gray-700"
               onClick={() => setShowSidebar(false)}
@@ -269,7 +275,7 @@ const Chat = () => {
 
           <div className="p-5 border-b border-gray-100">
             <div className="relative">
-              <AiOutlineSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+              <AiOutlineSearch className="absolute w-5 h-5 text-gray-400 transform -translate-y-1/2 left-3 top-1/2" />
               <input
                 type="text"
                 placeholder="Search conversations..."
@@ -297,16 +303,13 @@ const Chat = () => {
                       ? "bg-[#0B704E]/10 border-r-4 border-r-[#0B704E]"
                       : ""
                     }`}
-                  onClick={() => {
-                    handleStartChat(item?.receiverId?._id)
-                    handleSelectChat(item)
-                  }}
+                  onClick={() => handleStartChat(item?.receiverId?._id)}
                 >
                   <div className="relative">
                     <img
-                      src={item?.receiverId?.image || "/default-avatar.png"}
+                      src={item?.receiverId?.image || "https://avatar.iran.liara.run/public/13"}
                       alt={item?.receiverId?.name}
-                      className="h-12 w-12 rounded-full object-cover"
+                      className="object-cover w-12 h-12 rounded-full"
                     />
                     {item?.receiverId?.online && (
                       <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-[#14803c] border-2 border-white rounded-full"></div>
@@ -321,7 +324,7 @@ const Chat = () => {
                         {convertDate(item?.lastMessage?.createdAt || item?.createdAt)}
                       </span>
                     </div>
-                    <p className="text-sm text-gray-600 truncate mt-1">
+                    <p className="mt-1 text-sm text-gray-600 truncate">
                       {item?.lastMessage?.content || "No messages yet"}
                     </p>
                   </div>
@@ -337,19 +340,19 @@ const Chat = () => {
         </div>
 
 
-        <div className="flex-1 flex flex-col bg-white">
+        <div className="flex flex-col flex-1 bg-white">
           {selectedChat ? (
             <>
               <div className="bg-[#0B704E] text-white p-4 shadow-sm">
                 <div className="flex items-center gap-4">
                   <div className="relative">
                     <img
-                      src={selectedUser?.image || "/default-avatar.png"}
+                      src={selectedUser?.image || "https://avatar.iran.liara.run/public/13"}
                       alt={selectedUser?.name}
-                      className="h-12 w-12 rounded-full object-cover border-2 border-white/20"
+                      className="object-cover w-12 h-12 border-2 rounded-full border-white/20"
                     />
                     {selectedUser?.online && (
-                      <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-green-400 border-2 border-white rounded-full"></div>
+                      <div className="absolute w-4 h-4 bg-green-400 border-2 border-white rounded-full -bottom-1 -right-1"></div>
                     )}
                   </div>
                   <div className="flex-1">
@@ -358,18 +361,18 @@ const Chat = () => {
                       {selectedUser?.online ? "Online" : "Offline"}
                     </p>
                   </div>
-                  <button className="p-2 hover:bg-white/10 rounded-full transition-colors">
+                  <button className="p-2 transition-colors rounded-full hover:bg-white/10">
                     <FiMoreVertical className="w-5 h-5" />
                   </button>
                 </div>
               </div>
 
 
-              <div className="flex-1 overflow-y-auto bg-gray-50 p-4 space-y-4">
+              <div className="flex-1 p-4 space-y-4 overflow-y-auto bg-gray-50">
                 {messagesLoading ? (
                   <Loader />
                 ) : messages.length === 0 ? (
-                  <div className="text-center text-gray-500 py-8">
+                  <div className="py-8 text-center text-gray-500">
                     No messages yet. Start a conversation!
                   </div>
                 ) : (
@@ -394,13 +397,13 @@ const Chat = () => {
                                 key={index}
                                 src={url}
                                 alt="message"
-                                className="w-full aspect-square h-full object-contain rounded-2xl"
+                                className="object-contain w-full h-full aspect-square rounded-2xl"
                               />
                             ))}
                           </div>
                         )}
                         <p className="text-sm leading-relaxed">{msg?.content}</p>
-                        <div className="flex items-center justify-between mt-2 gap-2">
+                        <div className="flex items-center justify-between gap-2 mt-2">
                           <span
                             className={`text-xs ${msg?.sender?._id === user?.id
                               ? "text-[#E6F6EC]"
@@ -428,7 +431,7 @@ const Chat = () => {
 
                 {isTyping && (
                   <div className="flex justify-start">
-                    <div className="bg-white border rounded-2xl rounded-bl-md px-4 py-3 shadow-sm">
+                    <div className="px-4 py-3 bg-white border shadow-sm rounded-2xl rounded-bl-md">
                       <div className="flex space-x-1">
                         <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
                         <div
@@ -447,18 +450,18 @@ const Chat = () => {
               </div>
 
 
-              <div className="bg-white border-t border-gray-200 p-4">
+              <div className="p-4 bg-white border-t border-gray-200">
                 <div className="flex items-end gap-3">
-                  <div className="flex-1 relative">
-                    {file.length > 0 && <div className="max-w-xl h-48 p-2 rounded-lg overflow-hidden absolute gap-1 -top-56 bottom-0 grid grid-cols-5">
+                  <div className="relative flex-1">
+                    {file.length > 0 && <div className="absolute bottom-0 grid h-48 max-w-xl grid-cols-5 gap-1 p-2 overflow-hidden rounded-lg -top-56">
                       {file.map((f, index) => (
-                        <div key={index} className="col-span-1 relative bg-slate-200 rounded-md">
+                        <div key={index} className="relative col-span-1 rounded-md bg-slate-200">
                           <img
                             src={URL.createObjectURL(f)}
                             alt="file"
-                            className="w-full h-full object-contain"
+                            className="object-contain w-full h-full"
                           />
-                          <X className="absolute top-2 right-2 cursor-pointer" onClick={() => {
+                          <X className="absolute cursor-pointer top-2 right-2" onClick={() => {
                             setFile(prev => prev.filter((_, i) => i !== index));
                           }} />
                         </div>
@@ -474,7 +477,7 @@ const Chat = () => {
                     />
                   </div>
 
-                  <div className="flex relative gap-2">
+                  <div className="relative flex gap-2">
                     <input
                       type="file"
                       ref={fileInputRef}
@@ -504,10 +507,10 @@ const Chat = () => {
               </div>
             </>
           ) : (
-            <div className="flex-1 flex items-center justify-center bg-gray-50">
+            <div className="flex items-center justify-center flex-1 bg-gray-50">
               <div className="text-center text-gray-500">
-                <div className="text-6xl mb-4">💬</div>
-                <h3 className="text-xl font-semibold mb-2">No Chat Selected</h3>
+                <div className="mb-4 text-6xl">💬</div>
+                <h3 className="mb-2 text-xl font-semibold">No Chat Selected</h3>
                 <p>Select a conversation from the sidebar to start chatting</p>
               </div>
             </div>

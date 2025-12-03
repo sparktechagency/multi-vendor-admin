@@ -56,6 +56,7 @@ const Support = () => {
     userName: item?.user?.name || "N/A",
     email: item?.user?.email || "N/A",
     message: item?.message || "N/A",
+    reply: item?.reply.message || "N/A",
     subject: item?.subject || "N/A",
     createdAt: item?.createdAt || "N/A",
   }));
@@ -114,7 +115,7 @@ const Support = () => {
 
   return (
     <div>
-      <div className="my-5 md:my-10 flex flex-col md:flex-row gap-5 justify-between items-center">
+      <div className="flex flex-col items-center justify-between gap-5 my-5 md:my-10 md:flex-row">
         <PageHeading title="Support" />
         <div className="relative w-full sm:w-[300px] mt-5 md:mt-0 lg:mt-0">
           <input
@@ -122,7 +123,7 @@ const Support = () => {
             placeholder="Search..."
             className="border-2 border-orange-500 py-3 pl-12 pr-[65px] outline-none w-full rounded-md"
           />
-          <span className=" text-gray-600 absolute top-0 left-0 h-full px-5 flex items-center justify-center rounded-r-md cursor-pointer">
+          <span className="absolute top-0 left-0 flex items-center justify-center h-full px-5 text-gray-600 cursor-pointer rounded-r-md">
             <IoSearch className="text-[1.3rem]" />
           </span>
         </div>
@@ -171,11 +172,11 @@ const Support = () => {
             {selectedTicket && (
               <div className="space-y-6">
                 {/* Header */}
-                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                   <div className="flex items-center gap-3">
                     <img
                       src={`https://avatar.iran.liara.run/public/${selectedTicket.no}`}
-                      className="w-14 h-14 sm:w-16 sm:h-16 object-cover rounded-full ring-2 ring-emerald-100"
+                      className="object-cover rounded-full w-14 h-14 sm:w-16 sm:h-16 ring-2 ring-emerald-100"
                       alt="User Avatar"
                     />
                     <div>
@@ -189,7 +190,7 @@ const Support = () => {
                   </div>
                   {/* Subject quick view (from table) */}
                   <div className="text-sm text-gray-700 bg-gray-50 border border-gray-100 rounded-md px-3 py-2 max-w-[60%] sm:max-w-xs truncate">
-                    <span className="font-medium text-gray-600 mr-1">
+                    <span className="mr-1 font-medium text-gray-600">
                       Subject:
                     </span>
                     <span title={selectedTicket.subject}>
@@ -201,41 +202,41 @@ const Support = () => {
                 <div className="border-t border-gray-100" />
 
                 {/* Details Grid */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div className="bg-gray-50 rounded-lg p-4 border border-gray-100">
-                    <p className="text-xs uppercase tracking-wide text-gray-500">
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                  <div className="p-4 border border-gray-100 rounded-lg bg-gray-50">
+                    <p className="text-xs tracking-wide text-gray-500 uppercase">
                       No
                     </p>
                     <p className="mt-1 text-base font-medium text-gray-900">
                       {selectedTicket.no}
                     </p>
                   </div>
-                  <div className="bg-gray-50 rounded-lg p-4 border border-gray-100">
-                    <p className="text-xs uppercase tracking-wide text-gray-500">
+                  <div className="p-4 border border-gray-100 rounded-lg bg-gray-50">
+                    <p className="text-xs tracking-wide text-gray-500 uppercase">
                       User Name
                     </p>
                     <p className="mt-1 text-base font-medium text-gray-900">
                       {selectedTicket.userName}
                     </p>
                   </div>
-                  <div className="bg-gray-50 rounded-lg p-4 border border-gray-100">
-                    <p className="text-xs uppercase tracking-wide text-gray-500">
+                  <div className="p-4 border border-gray-100 rounded-lg bg-gray-50">
+                    <p className="text-xs tracking-wide text-gray-500 uppercase">
                       Email
                     </p>
                     <p className="mt-1 text-base font-medium text-gray-900">
                       {selectedTicket.email}
                     </p>
                   </div>
-                  <div className="bg-gray-50 rounded-lg p-4 border border-gray-100">
-                    <p className="text-xs uppercase tracking-wide text-gray-500">
+                  <div className="p-4 border border-gray-100 rounded-lg bg-gray-50">
+                    <p className="text-xs tracking-wide text-gray-500 uppercase">
                       Subject
                     </p>
                     <p className="mt-1 text-base font-medium text-gray-900">
                       {selectedTicket.subject}
                     </p>
                   </div>
-                  <div className="bg-gray-50 rounded-lg p-4 border border-gray-100 sm:col-span-2">
-                    <p className="text-xs uppercase tracking-wide text-gray-500">
+                  <div className="p-4 border border-gray-100 rounded-lg bg-gray-50 sm:col-span-2">
+                    <p className="text-xs tracking-wide text-gray-500 uppercase">
                       Date
                     </p>
                     <p className="mt-1 text-base font-medium text-gray-900">
@@ -255,15 +256,25 @@ const Support = () => {
                       })()}
                     </p>
                   </div>
-                  <div className="rounded-lg border border-gray-100 bg-white shadow-sm">
-                    <div className="px-4 py-2 border-b border-gray-100 bg-gray-50 rounded-t-lg">
-                      <h4 className="text-sm font-semibold text-gray-700">
-                        Description
-                      </h4>
+
+                  <div className="col-span-2 bg-white border border-gray-100 rounded-lg shadow-sm ">
+                    <div className="px-4 py-2 border-b border-gray-100 rounded-t-lg bg-gray-50">
+                      <h4 className="text-sm font-semibold text-gray-700">Description</h4>
                     </div>
                     <div className="p-4">
-                      <p className="text-gray-700 leading-relaxed">
+                      <p className="leading-relaxed text-gray-700">
                         {selectedTicket.message}
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="col-span-2 bg-white border border-gray-100 rounded-lg shadow-sm ">
+                    <div className="px-4 py-2 border-b border-gray-100 rounded-t-lg bg-gray-50">
+                      <h4 className="text-sm font-semibold text-gray-700">Reply</h4>
+                    </div>
+                    <div className="p-4">
+                      <p className="leading-relaxed text-gray-700">
+                        {selectedTicket.reply}
                       </p>
                     </div>
                   </div>
@@ -279,13 +290,12 @@ const Support = () => {
           footer={null}
           width={560}
         >
-          <div className="p-4 sm:p-5 space-y-5">
+          <div className="p-4 space-y-5 sm:p-5">
             <div className="flex items-center gap-3">
               <img
-                src={`https://avatar.iran.liara.run/public/${
-                  selectedTicket?.no ?? 1
-                }`}
-                className="w-10 h-10 object-cover rounded-full"
+                src={`https://avatar.iran.liara.run/public/${selectedTicket?.no ?? 1
+                  }`}
+                className="object-cover w-10 h-10 rounded-full"
                 alt="User Avatar"
               />
               <div>
@@ -296,7 +306,7 @@ const Support = () => {
               </div>
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block mb-2 text-sm font-medium text-gray-700">
                 Your Message
               </label>
               <textarea
@@ -304,20 +314,20 @@ const Support = () => {
                 value={replyMessage}
                 onChange={(e) => setReplyMessage(e.target.value)}
                 placeholder="Type your message..."
-                className="w-full border border-gray-300 rounded-md p-3 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-emerald-500"
               />
             </div>
             <div className="flex justify-end gap-3">
               <button
                 onClick={closeReply}
-                className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50"
+                className="px-4 py-2 text-gray-700 border border-gray-300 rounded-md hover:bg-gray-50"
               >
                 Cancel
               </button>
               <button
                 onClick={sendReply}
                 disabled={!replyMessage.trim()}
-                className="px-4 py-2 rounded-md text-white bg-emerald-600 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-emerald-700"
+                className="px-4 py-2 text-white rounded-md bg-emerald-600 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-emerald-700"
               >
                 Send
               </button>

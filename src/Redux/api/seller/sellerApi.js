@@ -35,6 +35,14 @@ export const sellerApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ["seller"],
     }),
+
+    deleteSeller: builder.mutation({
+      query: (id) => ({
+        url: `/admin/users/${id}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["user"],
+    }),
   }),
 });
 
@@ -42,4 +50,5 @@ export const {
   useGetAllSellersQuery,
   useBlockSellerMutation,
   useApproveSellerMutation,
+  useDeleteSellerMutation,
 } = sellerApi;

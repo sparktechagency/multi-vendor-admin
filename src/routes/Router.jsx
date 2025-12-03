@@ -1,6 +1,7 @@
 import { createBrowserRouter } from "react-router-dom";
 import { lazy, Suspense } from "react";
 import Loader from "../components/common/Loader";
+import ProtectedRoute from "./ProtectedRoute";
 
 const Dashboard = lazy(() => import("../components/Dashboard/Dashboard"));
 const Profile = lazy(() => import("../page/Settings/Profile"));
@@ -13,7 +14,8 @@ const SellerManagement = lazy(() => import("../page/sellerManagement/SellerManag
 const Subscription = lazy(() => import("../page/subscription/Subscription"));
 const UpdateSubscription = lazy(() => import("../page/subscription/UpdateSubscription"));
 const PremiumSubscribers = lazy(() => import("../page/PremiumSubscribers/PremiumSubscribers"));
-const AdPromotion = lazy(() => import("../page/AdPromotion/AdPromotion"));
+const AdPromotion = lazy(() => import("../page/AdPromotion/AdPromotion"))
+const AdminAdPromotion = lazy(() => import("../page/AdminAdPromotion/AdminAdPromotion")) // New import
 const Faq = lazy(() => import("../page/Settings/Faq"));
 const Support = lazy(() => import("../page/Support/Support"));
 const CategoryManagement = lazy(() => import("../page/CategoryManagement/CategoryManagement"));
@@ -23,6 +25,7 @@ const ResetPassword = lazy(() => import("../auth/ResetPassword"));
 const ForgetPassword = lazy(() => import("../auth/ForgetPassword"));
 const Users = lazy(() => import("../page/UserManagement/Users"));
 const SignIn = lazy(() => import("../auth/SignIn"));
+const AdminManagement = lazy(() => import("../page/AdminManagement/AdminManagement"));
 
 const withSuspense = (Comp) => (
   <Suspense fallback={<Loader />}>
@@ -33,74 +36,88 @@ const withSuspense = (Comp) => (
 export const router = createBrowserRouter([
   {
     path: "/",
-    element: withSuspense(DashboardLayout),
+    element: <ProtectedRoute />,
     children: [
       {
         path: "/",
-        element: withSuspense(Dashboard),
-      },
-      {
-        path: "/dashboard/user-management",
-        element: withSuspense(Users),
-      },
-      {
-        path: "/dashboard/seller-management",
-        element: withSuspense(SellerManagement),
-      },
+        element: withSuspense(DashboardLayout),
+        children: [
+          {
+            path: "/",
+            element: withSuspense(Dashboard),
+          },
+          {
+            path: "/dashboard/user-management",
+            element: withSuspense(Users),
+          },
+          {
+            path: "/dashboard/seller-management",
+            element: withSuspense(SellerManagement),
+          },
+          {
+            path: "/admin-management",
+            element: withSuspense(AdminManagement),
+          },
 
-      {
-        path: "/dashboard/subscription",
-        element: withSuspense(Subscription),
+          {
+            path: "/dashboard/subscription",
+            element: withSuspense(Subscription),
+          },
+          {
+            path: "/dashboard/update-subscription",
+            element: withSuspense(UpdateSubscription),
+          },
+          {
+            path: "/premium-subscribers",
+            element: withSuspense(PremiumSubscribers),
+          },
+          {
+            path: "/ads-promotion",
+            element: withSuspense(AdPromotion),
+          },
+          {
+            path: "/admin-ads-promotion", // New route
+            element: withSuspense(AdminAdPromotion),
+          },
+          {
+            path: "/dashboard/Settings/profile",
+            element: withSuspense(Profile),
+          },
+          {
+            path: "/dashboard/Settings/notification",
+            element: withSuspense(Notification),
+          },
+          {
+            path: "/dashboard/Settings/Terms&Condition",
+            element: withSuspense(TermsCondition),
+          },
+          {
+            path: "/dashboard/Settings/PrivacyPolicy",
+            element: withSuspense(PrivacyPolicy),
+          },
+          {
+            path: "/faq",
+            element: withSuspense(Faq),
+          },
+          {
+            path: "/chat",
+            element: withSuspense(Chat),
+          },
+          {
+            path: "/support",
+            element: withSuspense(Support),
+          },
+          {
+            path: "/category-management",
+            element: withSuspense(CategoryManagement),
+          },
+          {
+            path: "/category-management/:id/sub-categories",
+            element: withSuspense(SubCategory),
+          },
+        ],
       },
-      {
-        path: "/dashboard/update-subscription",
-        element: withSuspense(UpdateSubscription),
-      },
-      {
-        path: "/premium-subscribers",
-        element: withSuspense(PremiumSubscribers),
-      },
-      {
-        path: "/ads-promotion",
-        element: withSuspense(AdPromotion),
-      },
-      {
-        path: "/dashboard/Settings/profile",
-        element: withSuspense(Profile),
-      },
-      {
-        path: "/dashboard/Settings/notification",
-        element: withSuspense(Notification),
-      },
-      {
-        path: "/dashboard/Settings/Terms&Condition",
-        element: withSuspense(TermsCondition),
-      },
-      {
-        path: "/dashboard/Settings/PrivacyPolicy",
-        element: withSuspense(PrivacyPolicy),
-      },
-      {
-        path: "/faq",
-        element: withSuspense(Faq),
-      },
-      {
-        path: "/chat",
-        element: withSuspense(Chat),
-      },
-      {
-        path: "/support",
-        element: withSuspense(Support),
-      },
-      {
-        path: "/category-management",
-        element: withSuspense(CategoryManagement),
-      },
-      {
-        path: "/category-management/:id/sub-categories",
-        element: withSuspense(SubCategory),
-      },
-    ],
+    ]
   },
   {
     path: "/login",

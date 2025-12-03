@@ -41,15 +41,17 @@ export default function TermsAndCondition() {
     <div className="p-5">
       <PageHeading title="Terms And Condition" />
 
-      <div className=" bg-white rounded shadow p-5 h-full mt-5">
-        <ReactQuill
-          style={{ padding: "10px" }}
+      <div className="h-full p-5 mt-5 bg-white rounded shadow">
+        <div style={{ height: "400px" }}>
+          <ReactQuill
+          style={{ padding: "10px", height: "90%" }}
           theme="snow"
           value={content}
           onChange={setContent}
         />
+        </div>
       </div>
-      <div className="text-center py-5">
+      <div className="py-5 text-center">
         <button
           onClick={handleSave}
           disabled={isSaving || isFetching}
