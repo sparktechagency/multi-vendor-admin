@@ -50,10 +50,10 @@ export default function SellerGrowth() {
     if (active && payload && payload.length) {
       const { month, appUsers, activeUsers } = payload[0].payload;
       return (
-        <div className="bg-white py-2 px-3 rounded shadow border">
-          <p className="text-black font-semibold">{`Month: ${month}`}</p>
-          <p className="text-[#FF914C]">{`App Users: ${appUsers}`}</p>
-          <p className="text-[#083E24]">{`Active Users: ${activeUsers}`}</p>
+        <div className="px-3 py-2 bg-white border rounded shadow">
+          <p className="font-semibold text-black">{`Month: ${month}`}</p>
+          <p className="text-[#FF914C]">{`Sellers: ${appUsers}`}</p>
+          <p className="text-[#083E24]">{`Customers: ${activeUsers}`}</p>
         </div>
       );
     }
@@ -62,20 +62,20 @@ export default function SellerGrowth() {
 
   return (
     <>
-      <div className="flex flex-col md:flex-row md:justify-between lg:justify-between items-center gap-5 my-5">
+      <div className="flex flex-col items-center gap-5 my-5 md:flex-row md:justify-between lg:justify-between">
         <div>
           <h1 className="text-xl font-semibold">Seller Growth</h1>
         </div>
         <div className="relative w-full md:w-32">
           <button
             onClick={() => setIsOpen(!isOpen)}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md flex justify-between items-center bg-white transition"
+            className="flex items-center justify-between w-full px-3 py-2 transition bg-white border border-gray-300 rounded-md"
           >
             <span className="text-[#0B704E]">{selectedYear}</span>
             <FaChevronDown className="text-[#0B704E] w-5 h-5 ml-5" />
           </button>
           {isOpen && (
-            <div className="absolute z-10 w-full bg-white border border-gray-300 rounded-md mt-1 max-h-60 overflow-y-auto shadow-lg text-lg">
+            <div className="absolute z-10 w-full mt-1 overflow-y-auto text-lg bg-white border border-gray-300 rounded-md shadow-lg max-h-60">
               {years.map((year) => (
                 <div
                   key={year}
@@ -92,7 +92,7 @@ export default function SellerGrowth() {
         </div>
       </div>
       {/* KPIs from currentStats and totals */}
-      {/* <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+      {/* <div className="grid grid-cols-1 gap-4 mb-4 md:grid-cols-3">
         <div className="p-4 bg-white border rounded-md">
           <p className="text-sm text-gray-500">Total Sellers</p>
           <p className="text-2xl font-semibold text-[#0B704E]">{totals?.totalSellers ?? 0}</p>
@@ -104,7 +104,7 @@ export default function SellerGrowth() {
         <div className="p-4 bg-white border rounded-md">
           <p className="text-sm text-gray-500">This Month</p>
           <p className="text-sm text-gray-700">{currentStats?.monthName || "-"}</p>
-          <div className="mt-1 flex gap-6">
+          <div className="flex gap-6 mt-1">
             <div>
               <p className="text-xs text-gray-500">App Users</p>
               <p className="text-lg font-semibold">{currentStats?.appUsers ?? 0}</p>
@@ -118,9 +118,9 @@ export default function SellerGrowth() {
       </div> */}
       <div className="w-full h-[300px]">
         {isLoading ? (
-          <div className="w-full h-full flex items-center justify-center text-gray-500">Loading...</div>
+          <div className="flex items-center justify-center w-full h-full text-gray-500">Loading...</div>
         ) : chartData.length === 0 ? (
-          <div className="w-full h-full flex items-center justify-center text-gray-500">No data to display</div>
+          <div className="flex items-center justify-center w-full h-full text-gray-500">No data to display</div>
         ) : (
         <ResponsiveContainer width="100%" height="100%">
           <BarChart
@@ -138,14 +138,14 @@ export default function SellerGrowth() {
               fill="#FF914C"
               barSize={30}
               radius={[5, 5, 0, 0]}
-              name="App Users"
+              name="Sellers"
             />
             <Bar
               dataKey="activeUsers"
               fill="#083E24"
               barSize={30}
               radius={[5, 5, 0, 0]}
-              name="Active Users"
+              name="Customers"
             />
           </BarChart>
         </ResponsiveContainer>

@@ -185,13 +185,13 @@ const SellerManagement = () => {
       width: 220,
       ellipsis: true,
     },
-    {
-      title: "Distribution",
-      dataIndex: "distribution",
-      key: "distribution",
-      width: 200,
-      ellipsis: true,
-    },
+    // {
+    //   title: "Distribution",
+    //   dataIndex: "distribution",
+    //   key: "distribution",
+    //   width: 200,
+    //   ellipsis: true,
+    // },
     {
       title: "Location",
       dataIndex: "businessAddress",

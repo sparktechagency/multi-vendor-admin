@@ -148,8 +148,8 @@ const Faq = () => {
   };
 
   return (
-    <div className="relative p-5 z-0">
-      <div className="flex justify-between items-center">
+    <div className="relative z-0 p-5">
+      <div className="flex items-center justify-between">
         <PageHeading title="FAQ" />
         <div className="text-white">
           <button
@@ -165,7 +165,7 @@ const Faq = () => {
         </div>
       </div>
 
-      <div className="flex gap-2 flex-col w-full mt-5 bg-white p-5">
+      <div className="flex flex-col w-full gap-2 p-5 mt-5 bg-white">
         {listLoading ? (
           <div className="flex items-center justify-center py-10">
             <Spin />
@@ -179,50 +179,51 @@ const Faq = () => {
               className="border-b border-[#e5eaf2] rounded py-3"
             >
               <div
-                className="flex gap-2 cursor-pointer items-center justify-between w-full"
+                className="flex items-center justify-between w-full gap-2 cursor-pointer"
                 onClick={() => handleClick(index)}
               >
-                <h2 className="text-base font-normal md:font-bold md:text-2xl flex gap-2 items-center">
-                  <FaRegQuestionCircle className="w-5 h-5 hidden md:flex" />
+                <h2 className="flex items-center gap-2 text-base font-normal md:font-bold md:text-2xl">
+                  <FaRegQuestionCircle className="hidden w-5 h-5 md:flex" />
                   {faq?.question}
                 </h2>
-                <div className="flex gap-2 md:gap-4 items-center">
+                <div className="flex items-center gap-2 md:gap-4">
                   <FaChevronDown
-                    className={`w-5 h-5 text-[#0D0D0D] transition-all duration-300 ${
-                      isAccordionOpen === index &&
+                    className={`w-5 h-5 text-[#0D0D0D] transition-all duration-300 ${isAccordionOpen === index &&
                       "rotate-[180deg] !text-[#14803c]"
-                    }`}
+                      }`}
                   />
-                  <div className="border-2 px-1.5 py-1 rounded border-[#14803c] bg-[#f0fcf4]">
+                  <div className="border-2 px-1.5 py-1 rounded border-[#14803c] bg-[#f0fcf4]"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      showModal3(faq);
+                    }}
+                  >
                     <button
                       className=""
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        showModal3(faq);
-                      }}
                     >
                       <CiEdit className="text-2xl cursor-pointer text-[#14803c] font-bold transition-all" />
                     </button>
                   </div>
-                  <div className="border-2 px-1.5 py-1 rounded border-[#14803c] bg-[#f0fcf4]">
+                  <div className="border-2 px-1.5 py-1 rounded border-[#14803c] bg-[#f0fcf4]"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      openDeleteModal(faq?._id);
+                    }}
+                  >
                     <button
                       className=""
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        openDeleteModal(faq?._id);
-                      }}
+
                     >
-                      <RiDeleteBin6Line className="text-2xl cursor-pointer text-red-500 transition-all" />
+                      <RiDeleteBin6Line className="text-2xl text-red-500 transition-all cursor-pointer" />
                     </button>
                   </div>
                 </div>
               </div>
               <div
-                className={`grid transition-all duration-300 overflow-hidden ease-in-out ${
-                  isAccordionOpen === index
+                className={`grid transition-all duration-300 overflow-hidden ease-in-out ${isAccordionOpen === index
                     ? "grid-rows-[1fr] opacity-100 mt-4"
                     : "grid-rows-[0fr] opacity-0"
-                }`}
+                  }`}
               >
                 <p className="text-[#424242] text-[0.9rem] overflow-hidden">
                   {faq?.answer}
