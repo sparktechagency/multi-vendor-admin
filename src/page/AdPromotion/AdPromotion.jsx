@@ -61,14 +61,14 @@ export default function AdPromotion() {
       <div className="flex items-center justify-between mb-5 text-center">
         <PageHeading title="Ads Promotion" />
         <div className="flex items-center justify-end">
-          <button
+          {/* <button
             onClick={() => {
               setAddModalOpen(true);
             }}
             className="bg-[#FF914C] text-white px-4 py-3 rounded-lg hover:bg-[#FF914C]/80"
           >
             + Add New Promotion
-          </button>
+          </button> */}
         </div>
       </div>
       {/* Ads list */}

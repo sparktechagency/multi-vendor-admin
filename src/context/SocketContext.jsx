@@ -35,7 +35,7 @@ export const SocketProvider = ({ children }) => {
   const [isConnected, setIsConnected] = useState(false);
   const { currentUser } = useUserContext();
 
-  const socketUrl = "http://10.10.20.22:5000";
+  const socketUrl = "https://api.appprosure.com";
   const { token } = useSelector((state) => state.auth);
   const [messageHandlers, setMessageHandlers] = useState(new Map());
   const [conversationUpdateHandlers, setConversationUpdateHandlers] = useState(new Map());
