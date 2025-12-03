@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { IoSearch } from "react-icons/io5";
-import { MdBlockFlipped, MdDeleteForever } from "react-icons/md";
+import { MdBlockFlipped } from "react-icons/md";
 import PageHeading from "../../shared/PageHeading";
 import { ConfigProvider, Table } from "antd";
 import {
@@ -10,6 +10,7 @@ import {
 } from "../../Redux/api/user/userApi";
 import Loader from "../../components/common/Loader";
 import Swal from "sweetalert2";
+import { FiTrash2 } from "react-icons/fi";
 
 export default function Users() {
   const [search, setSearch] = useState("");
@@ -102,7 +103,7 @@ export default function Users() {
             className={`rounded-lg p-2 bg-red-200 transition duration-200 ${isDeleting ? "opacity-60 cursor-not-allowed" : ""
               }`}
           >
-            <MdDeleteForever className="w-6 h-6 text-red-600" />
+            <FiTrash2 className="w-6 h-6 text-red-600" />
           </button>
         </div>
       ),
